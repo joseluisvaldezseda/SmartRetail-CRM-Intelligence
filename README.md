@@ -14,8 +14,6 @@
 
 A comprehensive customer intelligence platform that combines **RFM segmentation**, **churn prediction**, **lifetime value forecasting**, and **product recommendation engines** into a unified, actionable dashboard.
 
-![Dashboard Preview](https://via.placeholder.com/800x400/1e293b/ffffff?text=Customer+Intelligence+Dashboard+Preview)
-
 > **💡 Quick Start:** [Access Live Demo](https://smartretail-crm-intelligence.streamlit.app/) | [View Documentation](#-installation--setup)
 
 ---
