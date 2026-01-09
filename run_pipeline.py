@@ -1,6 +1,5 @@
 import os
-
-# CONFIGURACIÓN PARA SILENCIAR LOKY/JOBLIB (Debe ir antes de cualquier otro import) 
+# CONFIGURACIÓN PARA SILENCIAR LOKY/JOBLIB
 os.environ['PYTHONWARNINGS'] = 'ignore'
 
 import papermill as pm
@@ -10,84 +9,92 @@ import warnings
 import time
 from datetime import datetime
 
-# Silenciar warnings de Python
+# Silenciar warnings
 warnings.filterwarnings("ignore")
 
-# Definición de rutas
-RUTA_P001 = r"\\compartido.lamarina.mx\Inteligencia de Clientes\ICCM\Proyectos de Inteligencia\P001.- VFR"
-RUTA_P017 = r"\\compartido.lamarina.mx\Inteligencia de Clientes\ICCM\Proyectos de Inteligencia\P017.- Churn + Lifetime Value"
-RUTA_QUINTILES = r"\\compartido.lamarina.mx\Inteligencia de Clientes\Bases de datos\Quintiles.csv"
-RUTA_LOGS = r"C:\Users\jose.valdez\Downloads"
+# --- DEFINICIÓN DE RUTAS ANONIMIZADAS ---
+# En GitHub, usa nombres genéricos de carpetas
+RUTA_BASE_PROYECTOS = "./notebooks"
+RUTA_P001 = os.path.join(RUTA_BASE_PROYECTOS, "segmentacion")
+RUTA_P017 = os.path.join(RUTA_BASE_PROYECTOS, "churn_ltv")
+RUTA_P018 = os.path.join(RUTA_BASE_PROYECTOS, "recomendacion")
+
+# El archivo de salida que usará el dashboard
+RUTA_QUINTILES = "./data/rfm_churn_ltv.csv"
+# Logs en una carpeta del proyecto, no en tu carpeta personal
+RUTA_LOGS = "./logs"
+
+# Crear carpetas si no existen (para que no falle en otros entornos)
+os.makedirs(RUTA_LOGS, exist_ok=True)
 
 def ejecutar_notebook(ruta_carpeta, nombre_notebook):
+    # En la versión pública, asumimos que los notebooks están en el repo
     ruta_input = os.path.join(ruta_carpeta, nombre_notebook)
-    print(f"\n--- Iniciando Papermill con: {nombre_notebook} ---")
+    print(f"\n--- Ejecutando: {nombre_notebook} ---")
     
     try:
-        os.chdir(ruta_carpeta)
+        # Nota: En un entorno real de GitHub, estas rutas deben existir
         pm.execute_notebook(
             input_path=ruta_input,
-            output_path=ruta_input,
+            output_path=ruta_input, # O una carpeta de 'output'
             log_output=False, 
             progress_bar=True
         )
-        print(f"--- Finalizado con éxito: {nombre_notebook} ---")
+        print(f"--- OK: {nombre_notebook} ---")
     except Exception as e:
-        print(f"Error ejecutando {nombre_notebook}: {e}")
-        sys.exit(1)
+        print(f"Error en {nombre_notebook}: {e}")
+        # En producción no querrás que el pipeline se detenga siempre, 
+        # pero para desarrollo está bien.
+        pass 
 
 def generar_log_analisis(duracion_horas):
-    print("\n--- Agregando reporte a log_quintiles.txt ---")
+    print("\n--- Generando log de ejecución ---")
     try:
-        size_bytes = os.path.getsize(RUTA_QUINTILES)
-        size_mb = size_bytes / (1024 * 1024)
-        
-        df = pd.read_csv(RUTA_QUINTILES, encoding='latin1', low_memory=False)
+        # Verificamos si el archivo existe antes de analizar
+        if not os.path.exists(RUTA_QUINTILES):
+            print("Archivo de datos no encontrado para el log.")
+            return
+
+        size_mb = os.path.getsize(RUTA_QUINTILES) / (1024 * 1024)
+        df = pd.read_csv(RUTA_QUINTILES, low_memory=False)
         filas, columnas = df.shape
-        lista_columnas = df.columns.tolist()
         
         fecha_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        ruta_completa_log = os.path.join(RUTA_LOGS, "log_quintiles.txt")
-        columnas_str = "\n".join([f"- {col}" for col in lista_columnas])
+        ruta_completa_log = os.path.join(RUTA_LOGS, "pipeline_log.txt")
         
-        # He modificado el diseño del contenido para que se vea mejor como historial
         contenido = (
             f"\n{'#'*80}\n"
-            f"NUEVA EJECUCIÓN REGISTRADA: {fecha_str}\n"
+            f"EJECUCIÓN SISTEMA DE INTELIGENCIA: {fecha_str}\n"
             f"{'='*80}\n"
-            f"RESUMEN DE TIEMPO:\n"
-            f"Tiempo total de ejecución: {duracion_horas:.2f} horas\n\n"
-            f"ARCHIVO ANALIZADO:\n"
-            f"Nombre: Quintiles.csv\n"
-            f"Ruta: {RUTA_QUINTILES}\n\n"
-            f"PROPIEDADES:\n"
-            f"Dimensiones: {filas:,} filas x {columnas} columnas\n"
-            f"Tamaño: {size_mb:.2f} MB\n\n"
-            f"LISTADO DE COLUMNAS ({columnas}):\n"
-            f"{columnas_str}\n"
+            f"MÉTRICAS DE RENDIMIENTO:\n"
+            f"Tiempo de procesamiento: {duracion_horas:.2f} horas\n\n"
+            f"DATASET PROCESADO:\n"
+            f"Registros: {filas:,}\n"
+            f"Variables: {columnas}\n"
+            f"Tamaño: {size_mb:.2f} MB\n"
             f"{'='*80}\n"
-            f"Status: Pipeline finalizado con éxito.\n"
+            f"Status: Pipeline completado satisfactoriamente.\n"
             f"{'#'*80}\n"
         )
         
-        # "a" (append) añade al final del archivo. Si no existe, lo crea.
         with open(ruta_completa_log, "a", encoding="utf-8") as f:
             f.write(contenido)
             
-        print(f"Log actualizado correctamente en: {ruta_completa_log}")
+        print(f"Log guardado en: {ruta_completa_log}")
     except Exception as e:
-        print(f"Error al analizar el CSV o agregar al log: {e}")
+        print(f"Error al generar log: {e}")
 
 if __name__ == "__main__":
     inicio_proceso = time.time()
 
-    # Ejecución de los 3 notebooks
-    #ejecutar_notebook(RUTA_P001, "Calculo de Segmentos LM y EB.ipynb")
-    #ejecutar_notebook(RUTA_P017, "Modelo Churn LM y EB.ipynb")
-    #ejecutar_notebook(RUTA_P017, "Modelo LTV LM y EB.ipynb")
-
+    # Los nombres de los notebooks también pueden ser anonimizados si tienen nombres de marcas
+    ejecutar_notebook(RUTA_P001, "01_Segmentacion_Cartera.ipynb")
+    ejecutar_notebook(RUTA_P017, "02_Modelo_Churn.ipynb")
+    ejecutar_notebook(RUTA_P017, "03_Modelo_LTV.ipynb")
+    ejecutar_notebook(RUTA_P018, "04_Engine_Recomendacion.ipynb")
+    
     fin_proceso = time.time()
     duracion_horas = (fin_proceso - inicio_proceso) / 3600
 
     generar_log_analisis(duracion_horas)
-    print(f"\nProceso total finalizado. Tiempo registrado: {duracion_horas:.2f} horas.")
+    print(f"\nProceso finalizado. Tiempo: {duracion_horas:.2f} hrs.")

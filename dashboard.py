@@ -369,7 +369,7 @@ if df_raw is not None:
 
 
     # --- 7. TABLA ---
-    st.markdown('<p class="section-header">Explorador</p>', unsafe_allow_html=True)
+    st.markdown('<p class="section-header">Explorador de Clientes y Recomendaciones</p>', unsafe_allow_html=True)
     
     # MODIFICACIÓN: Buscador de cuenta
     search_query = st.text_input("Buscar cuenta específica:", placeholder="Ingrese ID de cuenta...")
@@ -378,7 +378,17 @@ if df_raw is not None:
     if search_query:
         df_table = df_table[df_table['CUENTA'].astype(str).str.contains(search_query, case=False, na=False)]
 
-    cols_t = ['CUENTA', 'NEGOCIO', 'Segmento_RFM', 'Potencial_Valor', 'Segmento_Recompra', 'CLV_90dias']
+    cols_t = [
+        'CUENTA', 
+        'NEGOCIO', 
+        'Segmento_RFM', 
+        'Potencial_Valor', 
+        'CLV_90dias', 
+        'Producto_Recomendado', 
+        'Confianza_Recomendacion',
+        'Categoria_Cross_Sell'
+    ]
+
     st.dataframe(
         df_table[cols_t], use_container_width=True, height=400,
         column_config={
