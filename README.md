@@ -315,8 +315,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 👤 Author
 
 **Jose Luis Valdez Seda**  
-📧 Email: joseluisvaldezseda@example.com  
-🔗 LinkedIn: [linkedin.com/in/yourprofile](https://linkedin.com/in/jose-luis-valdez-seda)  
+📧 Email: joseluisvaldezseda@gmail.com  
+🔗 LinkedIn: [linkedin.com/in/jose-luis-valdez-seda](https://linkedin.com/in/jose-luis-valdez-seda)  
 🐙 GitHub: [@joseluisvaldezseda](https://github.com/joseluisvaldezseda)
 
 ---
