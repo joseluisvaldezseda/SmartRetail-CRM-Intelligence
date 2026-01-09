@@ -6,7 +6,17 @@
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-FF4B4B.svg)](https://streamlit.io)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
+## 🌐 Live Demo
+
+**[🚀 Try the Live Dashboard](https://smartretail-crm-intelligence.streamlit.app/)** - Experience the full analytics platform in action!
+
+> *Explore real customer segmentation, churn predictions, and campaign strategies without any installation.*
+
 A comprehensive customer intelligence platform that combines **RFM segmentation**, **churn prediction**, **lifetime value forecasting**, and **product recommendation engines** into a unified, actionable dashboard.
+
+![Dashboard Preview](https://via.placeholder.com/800x400/1e293b/ffffff?text=Customer+Intelligence+Dashboard+Preview)
+
+> **💡 Quick Start:** [Access Live Demo](https://smartretail-crm-intelligence.streamlit.app/) | [View Documentation](#-installation--setup)
 
 ---
 
@@ -139,6 +149,9 @@ streamlit run dashboard.py
 ```
 Navigate to: http://localhost:8501
 ```
+
+### **Or Use the Live Demo**
+**[🌐 Access the hosted version](https://smartretail-crm-intelligence.streamlit.app/)** - No installation required!
 
 ---
 
@@ -304,8 +317,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 👤 Author
 
 **Jose Luis Valdez Seda**  
-📧 Email: your.email@example.com  
-🔗 LinkedIn: [linkedin.com/in/yourprofile](https://linkedin.com/in/yourprofile)  
+📧 Email: joseluisvaldezseda@example.com  
+🔗 LinkedIn: [linkedin.com/in/yourprofile](https://linkedin.com/in/jose-luis-valdez-seda)  
 🐙 GitHub: [@joseluisvaldezseda](https://github.com/joseluisvaldezseda)
 
 ---
@@ -317,16 +330,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Special thanks to the open-source ML community
 
 ---
-
-## 📞 Support
-
-For questions or issues:
-- 📫 Open an issue on GitHub
-- 💬 Contact via LinkedIn
-- 📧 Email directly
-
----
-
+ 
 <p align="center">
   <b>⭐ If you find this project useful, please consider giving it a star! ⭐</b>
 </p>
